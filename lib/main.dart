@@ -1,85 +1,87 @@
-import 'package:first_app/result.dart';
 import 'package:flutter/material.dart';
-//material google base'li dizaynlar içeriyor
-//buraya pubspec.yamldeki depenciesdeki flutterdan dolayı ulaşabiliyoruz
-import './quiz.dart';
-import './result.dart';
+import 'package:intl/intl.dart';
+import './clb.dart';
+import './avm.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
-class MyApp extends StatefulWidget {
-  State<StatefulWidget> createState() {
-    return _MyAppState();
-  }
-}
-
-class _MyAppState extends State<MyApp> {
-  var _questionIndex = 0;
-  final _questions = [
-    const {
-      'questionText': 'Whats\'s your favorite color?',
-      'answers': [
-        {'text': 'Black', 'score': 10},
-        {'text': 'Red', 'score': 5},
-        {'text': 'Green', 'score': 3},
-        {'text': 'White', 'score': 1},
-      ]
-    },
-    {
-      'questionText': 'What\'s your favorite animal?',
-      'answers': [
-        {'text': 'Rabbit', 'score': 2},
-        {'text': 'Lion', 'score': 6},
-        {'text': 'Snake', 'score': 9},
-        {'text': 'Cat', 'score': 1},
-      ]
-    },
-    {
-      'questionText': 'Who\'s your favorite instructor?',
-      'answers': [
-        {'text': 'Max', 'score': 4},
-        {'text': 'Basak', 'score': 4},
-        {'text': 'Omer', 'score': 4},
-        {'text': 'Kivanc', 'score': 4},
-      ]
-    },
-  ];
-  var _totalScore = 0;
-  void _answerQuestion(int score) {
-    setState(() {
-      _questionIndex++;
-    });
-    _totalScore += score;
-    print('Answer chosen!');
-
-    if (_questionIndex < _questions.length) {
-      print("We have more questions");
-    }
-  }
-
-  void _resetQuiz() {
-    setState(() {
-      _totalScore = 0;
-      _questionIndex = 0;
-    });
-  }
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('My First App'),
-        ),
-        body: _questionIndex < _questions.length
-            ? Quiz(
-                answerQuestion: _answerQuestion,
-                questionIndex: _questionIndex,
-                questions: _questions,
-              )
-            : Result(_totalScore, _resetQuiz),
+      home: MyHomePage(),
+    );
+  }
+}
+
+Class MyHomePage extends StatelessWidget {
+  final Avm avm = new Avm();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color.fromRGBO(80, 77, 229, 1),
+      ),
+      body: Column(
+        // mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Container(
+            width: double.infinity,
+            child: Card(
+              child: Text("CHART!"),
+              elevation: 5,
+              color: Colors.blue,
+            ),
+          ),
+          Card(
+            elevation: 5,
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    TextField(
+                      decoration: InputDecoration(labelText: "Title"),
+                    ),
+                    TextField(
+                      decoration: InputDecoration(labelText: "Amount"),
+                    ),
+                    FlatButton(
+                      child: Text("Add Transactions"),
+                      textColor: Colors.purple,
+                      onPressed: () {},
+                    )
+                  ]),
+            ),
+          ),
+          Column(
+           children: avm.brandList.map((tx) {
+              return Card(
+                  child: Row(children: <Widget>[
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.purple, width: 2)),
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    '?',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Colors.purple),
+                  ),
+                ),
+                Text("tx")
+              ]));
+            }).toList(),
+          ),
+          Card(
+            child: Container(
+              height: 30,
+            ),
+          )
+        ],
       ),
     );
   }
