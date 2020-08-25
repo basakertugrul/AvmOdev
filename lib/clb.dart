@@ -2,49 +2,95 @@
 import './avm.dart';
 
 class Clb {
-  final List<Avm> avms = [
-    Avm(
-      ad: "Kipa",
-      burgerKing: false,
-      sinema: true,
-      koton: true,
-      mavi: true,
-      fenerium: false,
-      mango: false,
-      migros: true,
-    ),
-    Avm(
-      ad: "Optimum",
-      burgerKing: false,
-      sinema: true,
-      koton: true,
-      mavi: true,
-      fenerium: false,
-      mango: false,
-      migros: true,
-    ),
-    Avm(
-      ad: "Palmiye",
-      burgerKing: false,
-      sinema: true,
-      koton: true,
-      mavi: true,
-      fenerium: false,
-      mango: false,
-      migros: true,
-    ),
-    Avm(
-      ad: "Agora",
-      burgerKing: false,
-      sinema: true,
-      koton: true,
-      mavi: true,
-      fenerium: false,
-      mango: false,
-      migros: true,
-    ),
-  ];
-  List<Avm> get avmList {
-    return avms;
+  var kipa = Avm.d('kipa', false, true, true, false, false, 40);
+  var optimum = Avm.d('optimum', true, false, true, true, true, 25);
+  var palmiye = Avm.d('palmiye', false, false, true, true, false, 35);
+  var agora = Avm.d('agora', true, true, true, true, false, 30);
+
+  int sayac;
+List<String> finalList;
+  void karsilastirma(Avm x, bool b, bool s, bool k, bool m, bool f) {
+    sayac = 0;
+    var users = new List(5);
+    users[0] = b;
+    users[1] = s;
+    users[2] = k;
+    users[3] = m;
+    users[4] = f;
+
+    var avms = new List(5);
+    avms[0] = x.burgerKing;
+    avms[1] = x.sinema;
+    avms[2] = x.koton;
+    avms[3] = x.mavi;
+    avms[4] = x.fenerium;
+
+    for (int i = 0; i < 5; i++) {
+      if (users[i] == true && avms[i] == false) {
+        x.olmayanlar[sayac] = i;
+        sayac++;
+      }
+    }
+    x.siralama = sayac;
+  }
+
+  void chooser(bool b, bool s, bool k, bool m, bool f, int konumkullanici) {
+    karsilastirma(kipa, b, s, k, m, f);
+    karsilastirma(optimum, b, s, k, m, f);
+    karsilastirma(palmiye, b, s, k, m, f);
+    karsilastirma(agora, b, s, k, m, f);
+
+    List<Avm> sira = [kipa, optimum, palmiye, agora];
+
+    sira.sort((a, b) => a.siralama.compareTo(b.siralama));
+
+    var temp = Avm.d('temp', false, false, false, false, false, 10000);
+
+    for (int pp = 0; pp < 4; pp++) {
+      for (int p = 0; p < 3; p++) {
+        if (sira[p] == sira[p + 1]) {
+          if (sira[p].mesafe(konumkullanici) >
+              sira[p + 1].mesafe(konumkullanici)) {
+            temp = sira[p];
+            sira[p] = sira[p + 1];
+            sira[p + 1] = temp;
+          }
+        }
+      }
+    }
+
+    
+    for (int p = 0; p < 4; p++) {
+      //print("${sira[p].ad}, ${sira[p].mesafe(konumkullanici)} km uzakta.");
+      finalList
+          .add("${sira[p].ad}, ${sira[p].mesafe(konumkullanici)} km uzakta.");
+      if (sira[p].siralama == 0) {
+        //print("Eşleşme var ");
+        finalList.add("Eşleşme var ");
+      } else {
+        for (int j = 0; j < sira[p].siralama; j++) {
+          if (sira[p].olmayanlar[j] == 0) {
+            // print("Burger King yok");
+            finalList.add("Burger King yok");
+          }
+          if (sira[p].olmayanlar[j] == 1) {
+            // print("Sinema yok");
+            finalList.add("Fenerium yok");
+          }
+          if (sira[p].olmayanlar[j] == 2) {
+            //print("Koton yok");
+            finalList.add("Fenerium yok");
+          }
+          if (sira[p].olmayanlar[j] == 3) {
+            // print("Mavi yok");
+            finalList.add("Fenerium yok");
+          }
+          if (sira[p].olmayanlar[j] == 4) {
+            // print("Fenerium yok");
+            finalList.add("Fenerium yok");
+          }
+        }
+      }
+    }
   }
 }

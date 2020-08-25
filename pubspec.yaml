@@ -24,7 +24,6 @@ dependencies:
   flutter:
     sdk: flutter
   search_choices:
-  intl: ^0.16.1
   multiselect_formfield: ^0.1.3
 
 

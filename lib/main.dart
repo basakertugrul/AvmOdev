@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import './clb.dart';
 import './avm.dart';
 import 'package:multiselect_formfield/multiselect_formfield.dart';
@@ -21,33 +20,46 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
+var x = new Clb();
+
 class _MyHomePageState extends State<MyHomePage> {
-  final Avm avm = new Avm(
-      ad: null,
-      fenerium: null,
-      burgerKing: null,
-      sinema: null,
-      koton: null,
-      mavi: null,
-      mango: null,
-      migros: null);
-  List _myActivities;
-  String _myActivitiesResult;
+  String whatever = "";
+
+  List<bool> myList;
+
+  int konum = 50;
+
+  var avm = Avm.s();
+
+  List _brandsList;
+
   final formKey = new GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    _myActivities = [];
-    _myActivitiesResult = '';
+    _brandsList = [];
   }
 
   _saveForm() {
+    for (int i = 0; i < avm.brands.length; i++) {
+      if (_brandsList.contains(avm.brands[i]))
+        myList[i] = true;
+      else
+        myList[i] = false;
+    }
+    x.chooser(myList[0], myList[1], myList[2], myList[3], myList[4], konum);
+
+    var concatenate = StringBuffer();
+
+    x.finalList.forEach((item) {
+      concatenate.write(item);
+    });
     var form = formKey.currentState;
     if (form.validate()) {
       form.save();
       setState(() {
-        _myActivitiesResult = _myActivities.toString();
+        whatever = concatenate.toString();
       });
     }
   }
@@ -68,41 +80,33 @@ class _MyHomePageState extends State<MyHomePage> {
                 padding: EdgeInsets.all(16),
                 child: MultiSelectFormField(
                   autovalidate: false,
-                  titleText: 'My workouts',
+                  titleText: 'Nereleri ziyaret etmek istersiniz?',
                   validator: (value) {
                     if (value == null || value.length == 0) {
-                      return 'Please select one or more options';
+                      return 'Lütfen gezmek istediğiniz istediğiniz yerleri seçin';
                     }
                     return null;
                   },
                   dataSource: [
                     {
-                      "display": "Running",
-                      "value": "Running",
+                      "display": "Burger King",
+                      "value": "Burger King",
                     },
                     {
-                      "display": "Climbing",
-                      "value": "Climbing",
+                      "display": "Fenerium",
+                      "value": "Fenerium",
                     },
                     {
-                      "display": "Walking",
-                      "value": "Walking",
+                      "display": "Mavi",
+                      "value": "Mavi",
                     },
                     {
-                      "display": "Swimming",
-                      "value": "Swimming",
+                      "display": "Sinema",
+                      "value": "Sinema",
                     },
                     {
-                      "display": "Soccer Practice",
-                      "value": "Soccer Practice",
-                    },
-                    {
-                      "display": "Baseball Practice",
-                      "value": "Baseball Practice",
-                    },
-                    {
-                      "display": "Football Practice",
-                      "value": "Football Practice",
+                      "display": "Koton",
+                      "value": "Koton",
                     },
                   ],
                   textField: 'display',
@@ -110,12 +114,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   okButtonLabel: 'OK',
                   cancelButtonLabel: 'CANCEL',
                   // required: true,
-                  hintText: 'Please choose one or more',
-                  initialValue: _myActivities,
+                  hintText: '',
+                  initialValue: _brandsList,
                   onSaved: (value) {
                     if (value == null) return;
                     setState(() {
-                      _myActivities = value;
+                      _brandsList = value;
                     });
                   },
                 ),
@@ -123,14 +127,11 @@ class _MyHomePageState extends State<MyHomePage> {
               Container(
                 padding: EdgeInsets.all(8),
                 child: RaisedButton(
-                  child: Text('Save'),
+                  child: Text('Kaydet'),
                   onPressed: _saveForm,
                 ),
               ),
-              Container(
-                padding: EdgeInsets.all(16),
-                child: Text(_myActivitiesResult),
-              )
+              Container(padding: EdgeInsets.all(16), child: Text(whatever))
             ],
           ),
         ),
