@@ -1,68 +1,16 @@
+import 'clb.dart';
 import 'package:flutter/material.dart';
-import './clb.dart';
-import './avm.dart';
-import 'package:multiselect_formfield/multiselect_formfield.dart';
+import 'package:dropdownfield/dropdownfield.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(MaterialApp(home: MyApp()));
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter App',
-      home: MyHomePage(),
-    );
-  }
+  _MyAppState createState() => _MyAppState();
 }
 
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-var x = new Clb();
-
-class _MyHomePageState extends State<MyHomePage> {
-  String whatever = "";
-
-  List<bool> myList;
-
-  int konum = 50;
-
-  var avm = Avm.s();
-
-  List _brandsList;
-
-  final formKey = new GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    super.initState();
-    _brandsList = [];
-  }
-
-  _saveForm() {
-    for (int i = 0; i < avm.brands.length; i++) {
-      if (_brandsList.contains(avm.brands[i]))
-        myList[i] = true;
-      else
-        myList[i] = false;
-    }
-    x.chooser(myList[0], myList[1], myList[2], myList[3], myList[4], konum);
-
-    var concatenate = StringBuffer();
-
-    x.finalList.forEach((item) {
-      concatenate.write(item);
-    });
-    var form = formKey.currentState;
-    if (form.validate()) {
-      form.save();
-      setState(() {
-        whatever = concatenate.toString();
-      });
-    }
-  }
+class _MyAppState extends State<MyApp> {
+  var xx = new Clb();
 
   @override
   Widget build(BuildContext context) {
@@ -70,72 +18,86 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(80, 77, 229, 1),
       ),
-      body: Center(
-        child: Form(
-          key: formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.all(16),
-                child: MultiSelectFormField(
-                  autovalidate: false,
-                  titleText: 'Nereleri ziyaret etmek istersiniz?',
-                  validator: (value) {
-                    if (value == null || value.length == 0) {
-                      return 'Lütfen gezmek istediğiniz istediğiniz yerleri seçin';
+      body: Container(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Text(
+              "Nerelere gitmek istersiniz?",
+              style: TextStyle(
+                fontSize: 20.0,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20.0),
+            Card(
+              elevation: 5,
+              borderOnForeground: true,
+              child: DropDownField(
+                controller: brandsSelected,
+                hintText: "Select ",
+                enabled: true,
+                itemsVisibleInDropdown: 5,
+                items: brands,
+                labelStyle: TextStyle(fontStyle: FontStyle.italic),
+                onValueChanged: (value) {
+                  setState(() {
+                    if (value == "Burger King") {
+                      burgerno = true;
                     }
-                    return null;
-                  },
-                  dataSource: [
-                    {
-                      "display": "Burger King",
-                      "value": "Burger King",
-                    },
-                    {
-                      "display": "Fenerium",
-                      "value": "Fenerium",
-                    },
-                    {
-                      "display": "Mavi",
-                      "value": "Mavi",
-                    },
-                    {
-                      "display": "Sinema",
-                      "value": "Sinema",
-                    },
-                    {
-                      "display": "Koton",
-                      "value": "Koton",
-                    },
-                  ],
-                  textField: 'display',
-                  valueField: 'value',
-                  okButtonLabel: 'OK',
-                  cancelButtonLabel: 'CANCEL',
-                  // required: true,
-                  hintText: '',
-                  initialValue: _brandsList,
-                  onSaved: (value) {
-                    if (value == null) return;
-                    setState(() {
-                      _brandsList = value;
-                    });
-                  },
-                ),
+                    if (value == "Sinema") {
+                      sinemano = true;
+                    }
+                    if (value == "Koton") {
+                      kotonno = true;
+                    }
+                    if (value == "Mavi") {
+                      mavino = true;
+                    }
+                    if (value == "Fenerium") {
+                      fenerno = true;
+                    }
+
+                    xx.chooser(
+                        burgerno, sinemano, kotonno, mavino, fenerno, 50);
+                  });
+                },
               ),
-              Container(
-                padding: EdgeInsets.all(8),
-                child: RaisedButton(
-                  child: Text('Kaydet'),
-                  onPressed: _saveForm,
-                ),
+            ),
+            Card(
+              margin: EdgeInsets.all(20),
+              color: Colors.pink[50],
+              child: Text(
+                xx.finallist.toString(),
+                textAlign: TextAlign.center,
               ),
-              Container(padding: EdgeInsets.all(16), child: Text(whatever))
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
+
+List<String> selectedBrands;
+final brandsSelected = TextEditingController();
+
+List<String> brands = [
+  "Gratis",
+  "Sinema",
+  "Mavi",
+  "Fenerium",
+  "GS Store",
+  "Burger King",
+  "H&M",
+  "Koton",
+  "Köfteci Ramiz",
+  "Mc Donald's",
+];
+bool burgerno = false;
+bool sinemano = false;
+bool kotonno = false;
+bool mavino = false;
+bool fenerno = false;

@@ -2,13 +2,19 @@
 import './avm.dart';
 
 class Clb {
-  var kipa = Avm.d('kipa', false, true, true, false, false, 40);
-  var optimum = Avm.d('optimum', true, false, true, true, true, 25);
-  var palmiye = Avm.d('palmiye', false, false, true, true, false, 35);
-  var agora = Avm.d('agora', true, true, true, true, false, 30);
+  var kipa = Avm('kipa', false, true, true, false, false, 40);
+  var optimum = Avm('optimum', true, false, true, true, true, 25);
+  var palmiye = Avm('palmiye', false, false, true, true, false, 35);
+  var agora = Avm('agora', true, true, true, true, false, 30);
 
   int sayac;
-List<String> finalList;
+
+  List<String> finalList = [""];
+
+  List<String> get finallist {
+    return this.finalList;
+  }
+
   void karsilastirma(Avm x, bool b, bool s, bool k, bool m, bool f) {
     sayac = 0;
     var users = new List(5);
@@ -41,10 +47,9 @@ List<String> finalList;
     karsilastirma(agora, b, s, k, m, f);
 
     List<Avm> sira = [kipa, optimum, palmiye, agora];
+sira.sort((a, b) => a.siralama.compareTo(b.siralama));
 
-    sira.sort((a, b) => a.siralama.compareTo(b.siralama));
-
-    var temp = Avm.d('temp', false, false, false, false, false, 10000);
+    var temp = Avm('temp', false, false, false, false, false, 10000);
 
     for (int pp = 0; pp < 4; pp++) {
       for (int p = 0; p < 3; p++) {
@@ -59,7 +64,6 @@ List<String> finalList;
       }
     }
 
-    
     for (int p = 0; p < 4; p++) {
       //print("${sira[p].ad}, ${sira[p].mesafe(konumkullanici)} km uzakta.");
       finalList
