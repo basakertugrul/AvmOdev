@@ -6,7 +6,7 @@ class Avm {
   bool mavi;
 
   String ad;
-  int siralama;
+  int siralama=0;
   List<int> olmayanlar = [-1, -1, -1, -1, -1];
   int konum;
   Avm(String ad, bool burgerKing, bool sinema, bool koton, bool mavi,

@@ -1,3 +1,5 @@
+import 'package:flutter/gestures.dart';
+
 import 'clb.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdownfield/dropdownfield.dart';
@@ -44,6 +46,7 @@ class _MyAppState extends State<MyApp> {
                 labelStyle: TextStyle(fontStyle: FontStyle.italic),
                 onValueChanged: (value) {
                   setState(() {
+                    selectedBrands.add(value);
                     if (value == "Burger King") {
                       burgerno = true;
                     }
@@ -66,14 +69,57 @@ class _MyAppState extends State<MyApp> {
                 },
               ),
             ),
-            Card(
-              margin: EdgeInsets.all(20),
-              color: Colors.pink[50],
-              child: Text(
-                xx.finallist.toString(),
-                textAlign: TextAlign.center,
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: (selectedBrands).map((tx) {
+                  return Container(
+                    margin: EdgeInsets.all(5),
+                    child: FlatButton(
+                      child: Container(
+                          margin: EdgeInsets.all(5),
+                          color: Colors.pink[50],
+                          child: Text(
+                            tx + "    X",
+                            style: TextStyle(fontStyle: FontStyle.normal),
+                          )),
+                      onPressed: () {
+                        setState(() {
+                          if (tx == "Burger King") {
+                            burgerno = false;
+                          }
+                          if (tx == "Sinema") {
+                            sinemano = false;
+                          }
+                          if (tx == "Koton") {
+                            kotonno = false;
+                          }
+                          if (tx == "Mavi") {
+                            mavino = false;
+                          }
+                          if (tx == "Fenerium") {
+                            fenerno = false;
+                          }
+                          selectedBrands.removeAt(selectedBrands.indexOf(tx));
+                          xx.chooser(
+                              burgerno, sinemano, kotonno, mavino, fenerno, 50);
+                          xx.finalList.add("value");
+                          xx.finalList.removeLast();
+                        });
+                      },
+                      color: Colors.pink[50],
+                    ),
+                  );
+                }).toList(),
               ),
             ),
+            Column(
+              children: (xx.finalList).map((tx) {
+                return Card(
+                  child: Text(tx),
+                );
+              }).toList(),
+            )
           ],
         ),
       ),
@@ -81,8 +127,8 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-List<String> selectedBrands;
-final brandsSelected = TextEditingController();
+var brandsSelected = TextEditingController();
+List<String> selectedBrands = ["->"];
 
 List<String> brands = [
   "Gratis",

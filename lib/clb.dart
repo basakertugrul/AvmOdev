@@ -41,19 +41,20 @@ class Clb {
   }
 
   void chooser(bool b, bool s, bool k, bool m, bool f, int konumkullanici) {
+    finalList = [""];
     karsilastirma(kipa, b, s, k, m, f);
     karsilastirma(optimum, b, s, k, m, f);
     karsilastirma(palmiye, b, s, k, m, f);
     karsilastirma(agora, b, s, k, m, f);
 
     List<Avm> sira = [kipa, optimum, palmiye, agora];
-sira.sort((a, b) => a.siralama.compareTo(b.siralama));
+    sira.sort((a, b) => a.siralama.compareTo(b.siralama));
 
     var temp = Avm('temp', false, false, false, false, false, 10000);
 
     for (int pp = 0; pp < 4; pp++) {
       for (int p = 0; p < 3; p++) {
-        if (sira[p] == sira[p + 1]) {
+        if (sira[p].siralama == sira[p + 1].siralama) {
           if (sira[p].mesafe(konumkullanici) >
               sira[p + 1].mesafe(konumkullanici)) {
             temp = sira[p];
@@ -67,7 +68,7 @@ sira.sort((a, b) => a.siralama.compareTo(b.siralama));
     for (int p = 0; p < 4; p++) {
       //print("${sira[p].ad}, ${sira[p].mesafe(konumkullanici)} km uzakta.");
       finalList
-          .add("${sira[p].ad}, ${sira[p].mesafe(konumkullanici)} km uzakta.");
+          .add("${sira[p].ad}:${sira[p].mesafe(konumkullanici)} km uzakta.");
       if (sira[p].siralama == 0) {
         //print("Eşleşme var ");
         finalList.add("Eşleşme var ");
@@ -79,15 +80,15 @@ sira.sort((a, b) => a.siralama.compareTo(b.siralama));
           }
           if (sira[p].olmayanlar[j] == 1) {
             // print("Sinema yok");
-            finalList.add("Fenerium yok");
+            finalList.add("Sinema yok");
           }
           if (sira[p].olmayanlar[j] == 2) {
             //print("Koton yok");
-            finalList.add("Fenerium yok");
+            finalList.add("Koton yok");
           }
           if (sira[p].olmayanlar[j] == 3) {
             // print("Mavi yok");
-            finalList.add("Fenerium yok");
+            finalList.add("Mavi yok");
           }
           if (sira[p].olmayanlar[j] == 4) {
             // print("Fenerium yok");
